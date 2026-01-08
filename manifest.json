@@ -1,0 +1,44 @@
+{
+  "name": "Salat Premium",
+  "short_name": "Salat",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#050a10",
+  "theme_color": "#e2b05e",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+### 2. Fichier `sw.js`
+```javascript
+const CACHE_NAME = 'salat-v1';
+const ASSETS = [
+  'index.html',
+  'manifest.json'
+];
+
+// Installation : on met en mémoire les fichiers importants
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  );
+});
+
+// Récupération : si on est hors-ligne, on donne ce qu'on a en mémoire
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((res) => res || fetch(e.request))
+  );
+});
+
+**Note importante :** N'oubliez pas d'ajouter deux images (`icon-192.png` et `icon-512.png`) pour que l'icône s'affiche bien sur l'écran d'accueil du téléphone !
