@@ -1,31 +1,32 @@
-// ANALOGIE : Le nom du placard où le majordome range les affaires
+// ANALOGIE : Le nom du placard où le majordome range les fichiers
 const CACHE_NAME = 'salat-premium-v1';
 
-// La liste des objets (fichiers) à mettre dans le placard
+// La liste des fichiers à mettre en mémoire pour le mode hors-ligne
+// On ajoute './' pour dire "cherche dans ce dossier"
 const ASSETS_TO_CACHE = [
-  'index.html',
-  'manifest.json',
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap'
+  './',
+  './index.html',
+  './manifest.json'
 ];
 
-// ÉVÉNEMENT 1 : L'installation (Le majordome prend son poste)
-// Il ouvre le placard et y dépose les fichiers importants
+// 1. INSTALLATION : Le majordome prépare le placard
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
+        console.log('Majordome : Je range les fichiers dans le placard !');
         return cache.addAll(ASSETS_TO_CACHE);
       })
   );
 });
 
-// ÉVÉNEMENT 2 : La récupération (Le majordome intercepte les demandes)
-// Quand l'app demande un fichier, le majordome regarde d'abord s'il l'a dans son placard.
-// S'il l'a, il le donne (mode hors-ligne). Sinon, il va le chercher sur Internet.
+// 2. RÉCUPÉRATION : Le majordome sert les fichiers
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
+        // Si le fichier est dans le placard, on le donne. 
+        // Sinon, on va le chercher sur internet.
         return response || fetch(event.request);
       })
   );
