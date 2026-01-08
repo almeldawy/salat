@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salat - Expérience Premium</title>
     
-    <!-- LIEN VERS LE MANIFEST (La carte d'identité de l'app) -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050a10">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
 
-    <!-- On importe une police plus élégante (Plus Jakarta Sans) -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* ANALOGIE : Les Variables sont comme des pots de peinture préparés à l'avance */
         :root {
             --bg-deep: #050a10;
             --card-bg: rgba(255, 255, 255, 0.05);
-            --accent: #e2b05e; /* Un ton Or prestigieux */
+            --accent: #e2b05e;
             --accent-glow: rgba(226, 176, 94, 0.3);
             --text-main: #ffffff;
             --text-dim: #94a3b8;
@@ -45,7 +42,6 @@
             align-items: center;
         }
 
-        /* Conteneur principal pour limiter la largeur sur PC */
         .app-container {
             width: 100%;
             max-width: 500px;
@@ -67,7 +63,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Zone de recherche élégante */
         .search-area {
             display: flex;
             background: var(--card-bg);
@@ -103,7 +98,6 @@
             transform: scale(0.95);
         }
 
-        /* Carte de la Prochaine Prière (Effet Premium) */
         .next-prayer-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
             border: 1px solid var(--glass-border);
@@ -135,7 +129,6 @@
             color: var(--text-dim);
         }
 
-        /* Grille des horaires */
         .prayer-grid {
             display: grid;
             gap: 12px;
@@ -152,7 +145,6 @@
             transition: background 0.3s;
         }
 
-        /* Style spécial pour Chourouq et Milieu de nuit (plus discret) */
         .prayer-row.extra {
             opacity: 0.7;
             background: transparent;
@@ -175,7 +167,6 @@
             color: var(--accent);
         }
 
-        /* Styles spécifiques pour le calendrier mensuel */
         .month-header {
             display: flex;
             padding: 0.5rem 0.5rem;
@@ -213,7 +204,6 @@
             color: var(--accent); 
         }
 
-        /* Onglets */
         .tabs {
             display: flex;
             gap: 10px;
@@ -236,10 +226,8 @@
             color: var(--bg-deep);
         }
 
-        /* Cache les éléments */
         .hidden { display: none; }
 
-        /* Animation d'entrée */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -267,7 +255,6 @@
         <button id="btnMonth" class="tab-btn" onclick="switchTab('month')">Calendrier</button>
     </div>
 
-    <!-- Vue Aujourd'hui -->
     <div id="viewToday" class="animate">
         <div class="next-prayer-card">
             <div class="next-prayer-label">Prochaine Prière</div>
@@ -276,12 +263,9 @@
             <div id="timer" class="countdown">Recherche de votre position...</div>
         </div>
 
-        <div class="prayer-grid" id="prayerList">
-            <!-- Rempli par JavaScript -->
-        </div>
+        <div class="prayer-grid" id="prayerList"></div>
     </div>
 
-    <!-- Vue Mois -->
     <div id="viewMonth" class="hidden animate">
         <div class="month-header">
             <div class="col-date">J</div>
@@ -293,25 +277,23 @@
             <div class="col">Ish</div>
             <div class="col">Min</div>
         </div>
-        <div id="monthTable">
-            <!-- Rempli par JavaScript -->
-        </div>
+        <div id="monthTable"></div>
     </div>
 </div>
 
 <script>
-    // --- SERVICE WORKER (Le majordome) ---
-    // On vérifie si le navigateur accepte les majordomes (Service Workers)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Majordome (SW) prêt !'))
-                .catch(err => console.log('Erreur Majordome', err));
+                .then(reg => console.log('SW prêt'))
+                .catch(err => console.log('Erreur SW', err));
         });
     }
 
     let lat, lon;
     const method = 3; 
+    let currentPrayers = []; // Stockage global pour rafraîchir le timer
+    let timerInterval = null;
 
     window.onload = () => {
         if (navigator.geolocation) {
@@ -369,7 +351,7 @@
         const json = await res.json();
         const t = json.data.timings;
         
-        const allTimes = [
+        currentPrayers = [
             {n: "Fajr", t: t.Fajr, type: "main"},
             {n: "Chourouq", t: t.Sunrise, type: "extra"},
             {n: "Dhuhr", t: t.Dhuhr, type: "main"},
@@ -379,8 +361,8 @@
             {n: "Minuit", t: t.Midnight, type: "extra"}
         ];
 
-        displayPrayers(allTimes);
-        calculateNext(allTimes.filter(p => p.type === "main"));
+        displayPrayers(currentPrayers);
+        startTimer(); // Démarre la boucle de mise à jour
         loadMonthData();
     }
 
@@ -398,11 +380,25 @@
         });
     }
 
-    function calculateNext(prayers) {
+    function startTimer() {
+        // On nettoie l'ancien intervalle s'il y en avait un
+        if(timerInterval) clearInterval(timerInterval);
+        
+        // On lance le premier calcul immédiatement
+        updateCountdown();
+        
+        // On demande au "majordome" de recalculer toutes les 60 secondes (1000ms * 60)
+        timerInterval = setInterval(updateCountdown, 60000);
+    }
+
+    function updateCountdown() {
+        if(currentPrayers.length === 0) return;
+
+        const mainPrayers = currentPrayers.filter(p => p.type === "main");
         const now = new Date();
         let next = null;
 
-        for (let p of prayers) {
+        for (let p of mainPrayers) {
             const [h, m] = p.t.split(':');
             const pDate = new Date();
             pDate.setHours(h, m, 0);
@@ -413,9 +409,10 @@
             }
         }
 
+        // Si aucune prière n'est trouvée pour aujourd'hui, c'est le Fajr de demain
         if (!next) {
-            next = { ...prayers[0], date: new Date(new Date().getTime() + 24*60*60*1000) };
-            const [h, m] = prayers[0].t.split(':');
+            next = { ...mainPrayers[0], date: new Date(new Date().getTime() + 24*60*60*1000) };
+            const [h, m] = mainPrayers[0].t.split(':');
             next.date.setHours(h, m, 0);
         }
 
@@ -425,7 +422,21 @@
         const diff = next.date - now;
         const hh = Math.floor(diff / 1000 / 60 / 60);
         const mm = Math.floor((diff / 1000 / 60) % 60);
-        document.getElementById('timer').innerText = `dans ${hh}h ${mm}m`;
+        
+        // Affichage du texte
+        let timeStr = "";
+        if(hh > 0) timeStr += hh + "h ";
+        timeStr += mm + "m";
+        
+        document.getElementById('timer').innerText = `dans ${timeStr}`;
+
+        // Mise à jour visuelle des lignes "actives"
+        const rows = document.querySelectorAll('.prayer-row');
+        rows.forEach(row => {
+            const name = row.querySelector('.prayer-name').innerText;
+            if(name === next.n) row.classList.add('active');
+            else row.classList.remove('active');
+        });
     }
 
     async function loadMonthData() {
