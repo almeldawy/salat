@@ -22,7 +22,6 @@
             --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        /* Styles pour le mode clair */
         body.light-mode {
             --bg-deep: #f0f2f5;
             --card-bg: #ffffff;
@@ -64,7 +63,6 @@
             position: relative;
         }
 
-        /* Bouton Thème - Taille réduite ici */
         .theme-toggle {
             position: absolute;
             top: 0;
@@ -72,19 +70,17 @@
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
             border-radius: 50%;
-            width: 32px; /* Réduit de 40px à 32px */
-            height: 32px; /* Réduit de 40px à 32px */
+            width: 32px;
+            height: 32px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem; /* Réduit de 1.2rem à 1rem */
+            font-size: 1rem;
             transition: transform 0.2s;
         }
 
-        .theme-toggle:active {
-            transform: scale(0.9);
-        }
+        .theme-toggle:active { transform: scale(0.9); }
 
         h1 {
             font-weight: 800;
@@ -134,10 +130,6 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        button.btn-search:active {
-            transform: scale(0.95);
-        }
-
         .next-prayer-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
             border: 1px solid var(--glass-border);
@@ -150,34 +142,12 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
-        body.light-mode .next-prayer-card {
-            background: #ffffff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
+        body.light-mode .next-prayer-card { background: #ffffff; }
 
-        .next-prayer-label {
-            color: var(--accent);
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
+        .next-prayer-time { font-size: 3.5rem; font-weight: 800; margin: 0.5rem 0; }
+        .countdown { font-size: 1rem; color: var(--text-dim); }
 
-        .next-prayer-time {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin: 0.5rem 0;
-        }
-
-        .countdown {
-            font-size: 1rem;
-            color: var(--text-dim);
-        }
-
-        .prayer-grid {
-            display: grid;
-            gap: 12px;
-        }
+        .prayer-grid { display: grid; gap: 12px; }
 
         .prayer-row {
             display: flex;
@@ -187,30 +157,10 @@
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            transition: background 0.3s;
         }
 
-        .prayer-row.extra {
-            opacity: 0.7;
-            background: transparent;
-            border-style: dashed;
-        }
-
-        .prayer-row.active {
-            border-color: var(--accent);
-            background: rgba(226, 176, 94, 0.05);
-        }
-
-        .prayer-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .prayer-time {
-            font-family: monospace;
-            font-size: 1.2rem;
-            color: var(--accent);
-        }
+        .prayer-row.active { border-color: var(--accent); background: rgba(226, 176, 94, 0.05); }
+        .prayer-row.extra { opacity: 0.7; border-style: dashed; background: transparent; }
 
         .month-header {
             display: flex;
@@ -219,7 +169,6 @@
             font-size: 0.6rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
             text-align: center;
         }
 
@@ -234,52 +183,32 @@
             text-align: center;
         }
 
-        .col { 
-            flex: 1; 
-            display: flex;
-            justify-content: center;
-            align-items: center; 
-        }
+        .col { flex: 1; display: flex; justify-content: center; align-items: center; }
+        .col-date { width: 25px; flex: 0 0 auto; font-weight: 800; color: var(--accent); }
+        .col-day { width: 35px; flex: 0 0 auto; font-size: 0.65rem; color: var(--text-dim); display: flex; justify-content: center; align-items: center; }
 
-        .col-date { 
-            width: 25px; 
-            flex: 0 0 auto; 
-            text-align: center;
-            font-weight: 800; 
-            color: var(--accent); 
-        }
+        .friday-row { border-color: var(--accent) !important; background: rgba(226, 176, 94, 0.05); }
 
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        .tab-btn {
-            flex: 1;
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-dim);
-            padding: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .tab-btn.active {
-            background: var(--text-main);
-            color: var(--bg-deep);
-        }
-
+        .tabs { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+        .tab-btn { flex: 1; background: var(--card-bg); border: 1px solid var(--glass-border); color: var(--text-dim); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+        .tab-btn.active { background: var(--text-main); color: var(--bg-deep); }
         .hidden { display: none; }
+        .animate { animation: fadeIn 0.6s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate {
-            animation: fadeIn 0.6s ease forwards;
+        /* --- STYLES IMPRESSION PDF --- */
+        @media print {
+            @page { size: A4 landscape; margin: 1cm; }
+            body * { visibility: hidden; }
+            #viewMonth, #viewMonth * { visibility: visible; }
+            #viewMonth { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
+            #printCityName { display: block !important; text-align: center; border-bottom: 2px solid #e2b05e; padding-bottom: 10px; margin-bottom: 20px; color: #000; font-size: 1.5rem; }
+            .btn-print, .tabs { display: none !important; }
+            .month-row { background: #fff !important; border: 1px solid #eee !important; color: #000 !important; break-inside: avoid; }
+            .month-header { color: #000 !important; border-bottom: 2px solid #e2b05e !important; }
+            .col-date, .col-day { color: #000 !important; font-weight: bold; }
+            .friday-row { background-color: #f9f9f9 !important; font-weight: bold; }
+            .friday-row .col-date, .friday-row .col-day { color: #e2b05e !important; }
         }
     </style>
 </head>
@@ -306,15 +235,20 @@
             <div class="next-prayer-label">Prochaine Prière</div>
             <div id="nextName" class="next-prayer-name" style="font-size: 1.5rem; margin-top: 5px;">Chargement...</div>
             <div id="nextTime" class="next-prayer-time">--:--</div>
-            <div id="timer" class="countdown">Recherche de votre position...</div>
+            <div id="timer" class="countdown">Recherche...</div>
         </div>
-
         <div class="prayer-grid" id="prayerList"></div>
     </div>
 
     <div id="viewMonth" class="hidden animate">
+        <button onclick="window.print()" class="btn-search btn-print" style="width: 100%; margin-bottom: 20px;">
+            🖨️ Télécharger / Imprimer le mois (PDF)
+        </button>
+        <h2 id="printCityName" style="display: none; font-family: 'Plus Jakarta Sans', sans-serif;"></h2>
+        
         <div class="month-header">
-            <div class="col-date">J</div>
+            <div class="col-date">#</div>
+            <div class="col-day">J</div>
             <div class="col">Fajr</div>
             <div class="col">Cho</div>
             <div class="col">Dhu</div>
@@ -328,11 +262,12 @@
 </div>
 
 <script>
+    // Réactivation de la PWA (Service Worker)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('SW prêt'))
-                .catch(err => console.log('Erreur SW', err));
+                .then(reg => console.log('Service Worker enregistré'))
+                .catch(err => console.log('Erreur SW:', err));
         });
     }
 
@@ -341,24 +276,17 @@
     let currentPrayers = [];
     let timerInterval = null;
 
-    // Gestion du Thème
     function toggleTheme() {
         const body = document.body;
         const btn = document.getElementById('themeToggle');
-        
         body.classList.toggle('light-mode');
-        
         const isLight = body.classList.contains('light-mode');
         btn.innerText = isLight ? "☀️" : "🌙";
-        
-        // On sauvegarde le choix de l'utilisateur
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
     }
 
-    // Au chargement, on applique le thème sauvegardé
     function applySavedTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
+        if (localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light-mode');
             document.getElementById('themeToggle').innerText = "☀️";
         }
@@ -368,8 +296,7 @@
         applySavedTheme();
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(pos => {
-                lat = pos.coords.latitude;
-                lon = pos.coords.longitude;
+                lat = pos.coords.latitude; lon = pos.coords.longitude;
                 updateLocationText("Ma position actuelle");
                 loadData();
             }, () => {
@@ -387,40 +314,28 @@
     async function searchCity() {
         const city = document.getElementById('cityInput').value;
         if(!city) return;
-        
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${city}`);
             const data = await response.json();
             if(data.length > 0) {
-                lat = data[0].lat;
-                lon = data[0].lon;
+                lat = data[0].lat; lon = data[0].lon;
                 updateLocationText(data[0].display_name);
                 loadData();
             }
-        } catch (e) {
-            console.error("Erreur recherche ville");
-        }
+        } catch (e) { console.error("Erreur recherche ville"); }
     }
 
     function switchTab(view) {
-        if(view === 'today') {
-            document.getElementById('viewToday').classList.remove('hidden');
-            document.getElementById('viewMonth').classList.add('hidden');
-            document.getElementById('btnToday').classList.add('active');
-            document.getElementById('btnMonth').classList.remove('active');
-        } else {
-            document.getElementById('viewToday').classList.add('hidden');
-            document.getElementById('viewMonth').classList.remove('hidden');
-            document.getElementById('btnToday').classList.remove('active');
-            document.getElementById('btnMonth').classList.add('active');
-        }
+        document.getElementById('viewToday').classList.toggle('hidden', view !== 'today');
+        document.getElementById('viewMonth').classList.toggle('hidden', view !== 'month');
+        document.getElementById('btnToday').classList.toggle('active', view === 'today');
+        document.getElementById('btnMonth').classList.toggle('active', view === 'month');
     }
 
     async function loadData() {
         const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${method}`);
         const json = await res.json();
         const t = json.data.timings;
-        
         currentPrayers = [
             {n: "Fajr", t: t.Fajr, type: "main"},
             {n: "Chourouq", t: t.Sunrise, type: "extra"},
@@ -430,7 +345,6 @@
             {n: "Isha", t: t.Isha, type: "main"},
             {n: "Minuit", t: t.Midnight, type: "extra"}
         ];
-
         displayPrayers(currentPrayers);
         startTimer();
         loadMonthData();
@@ -438,16 +352,12 @@
 
     function displayPrayers(prayers) {
         const container = document.getElementById('prayerList');
-        container.innerHTML = "";
-        prayers.forEach(p => {
-            const isExtra = p.type === "extra" ? "extra" : "";
-            container.innerHTML += `
-                <div class="prayer-row ${isExtra}">
-                    <span class="prayer-name">${p.n}</span>
-                    <span class="prayer-time">${p.t}</span>
-                </div>
-            `;
-        });
+        container.innerHTML = prayers.map(p => `
+            <div class="prayer-row ${p.type === "extra" ? "extra" : ""}">
+                <span class="prayer-name">${p.n}</span>
+                <span class="prayer-time">${p.t}</span>
+            </div>
+        `).join('');
     }
 
     function startTimer() {
@@ -458,80 +368,63 @@
 
     function updateCountdown() {
         if(currentPrayers.length === 0) return;
-
         const mainPrayers = currentPrayers.filter(p => p.type === "main");
         const now = new Date();
         let next = null;
-
         for (let p of mainPrayers) {
             const [h, m] = p.t.split(':');
             const pDate = new Date();
             pDate.setHours(h, m, 0);
-
-            if (pDate > now) {
-                next = { ...p, date: pDate };
-                break;
-            }
+            if (pDate > now) { next = { ...p, date: pDate }; break; }
         }
-
         if (!next) {
-            next = { ...mainPrayers[0], date: new Date(new Date().getTime() + 24*60*60*1000) };
+            next = { ...mainPrayers[0], date: new Date(now.getTime() + 86400000) };
             const [h, m] = mainPrayers[0].t.split(':');
             next.date.setHours(h, m, 0);
         }
-
         document.getElementById('nextName').innerText = next.n;
         document.getElementById('nextTime').innerText = next.t;
-        
         const diff = next.date - now;
-        const hh = Math.floor(diff / 1000 / 60 / 60);
-        const mm = Math.floor((diff / 1000 / 60) % 60);
-        
-        let timeStr = "";
-        if(hh > 0) timeStr += hh + "h ";
-        timeStr += mm + "m";
-        
-        document.getElementById('timer').innerText = `dans ${timeStr}`;
-
-        const rows = document.querySelectorAll('.prayer-row');
-        rows.forEach(row => {
-            const name = row.querySelector('.prayer-name').innerText;
-            if(name === next.n) row.classList.add('active');
-            else row.classList.remove('active');
+        const hh = Math.floor(diff / 3600000);
+        const mm = Math.floor((diff / 60000) % 60);
+        document.getElementById('timer').innerText = `dans ${hh > 0 ? hh + "h " : ""}${mm}m`;
+        document.querySelectorAll('.prayer-row').forEach(row => {
+            row.classList.toggle('active', row.querySelector('.prayer-name').innerText === next.n);
         });
     }
 
     async function loadMonthData() {
         const d = new Date();
-        const res = await fetch(`https://api.aladhan.com/v1/calendar?latitude=${lat}&longitude=${lon}&method=${method}&month=${d.getMonth()+1}&year=${d.getFullYear()}`);
+        const moisTexte = d.toLocaleDateString('fr-FR', { month: 'long' });
+        const annee = d.getFullYear();
+        const res = await fetch(`https://api.aladhan.com/v1/calendar?latitude=${lat}&longitude=${lon}&method=${method}&month=${d.getMonth()+1}&year=${annee}`);
         const json = await res.json();
         
-        let html = "";
-        json.data.forEach(day => {
-            const f = day.timings.Fajr.split(' ')[0];
-            const c = day.timings.Sunrise.split(' ')[0];
-            const d = day.timings.Dhuhr.split(' ')[0];
-            const a = day.timings.Asr.split(' ')[0];
-            const m = day.timings.Maghrib.split(' ')[0];
-            const i = day.timings.Isha.split(' ')[0];
-            const min = day.timings.Midnight.split(' ')[0];
+        const ville = document.getElementById('locationDisplay').innerText.replace('📍 ', '');
+        document.getElementById('printCityName').innerText = `Horaires des prières - ${ville} - ${moisTexte} ${annee}`;
 
+        let html = "";
+        const joursFr = { 'Monday': 'Lun', 'Tuesday': 'Mar', 'Wednesday': 'Mer', 'Thursday': 'Jeu', 'Friday': 'Ven', 'Saturday': 'Sam', 'Sunday': 'Dim' };
+
+        json.data.forEach(day => {
+            const nomJ = day.date.gregorian.weekday.en;
+            const isFriday = nomJ === 'Friday' ? 'friday-row' : '';
+            const t = day.timings;
             html += `
-                <div class="month-row">
+                <div class="month-row ${isFriday}">
                     <div class="col-date">${day.date.gregorian.day}</div>
-                    <div class="col">${f}</div>
-                    <div class="col">${c}</div>
-                    <div class="col">${d}</div>
-                    <div class="col">${a}</div>
-                    <div class="col">${m}</div>
-                    <div class="col">${i}</div>
-                    <div class="col">${min}</div>
-                </div>
-            `;
+                    <div class="col-day">${joursFr[nomJ]}</div>
+                    <div class="col">${t.Fajr.split(' ')[0]}</div>
+                    <div class="col">${t.Sunrise.split(' ')[0]}</div>
+                    <div class="col">${t.Dhuhr.split(' ')[0]}</div>
+                    <div class="col">${t.Asr.split(' ')[0]}</div>
+                    <div class="col">${t.Maghrib.split(' ')[0]}</div>
+                    <div class="col">${t.Isha.split(' ')[0]}</div>
+                    <div class="col">${t.Midnight.split(' ')[0]}</div>
+                </div>`;
         });
         document.getElementById('monthTable').innerHTML = html;
     }
 </script>
-
 </body>
 </html>
