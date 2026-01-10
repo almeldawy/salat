@@ -210,12 +210,12 @@
             color: var(--accent);
         }
 
-        /* --- AJUSTEMENTS CALENDRIER MOBILE --- */
+        /* --- STYLES CALENDRIER --- */
         .month-header {
             display: flex;
             padding: 0.5rem 2px;
             color: var(--accent);
-            font-size: 0.55rem; /* Réduit pour mobile */
+            font-size: 0.55rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -224,13 +224,19 @@
 
         .month-row {
             display: flex;
-            padding: 0.6rem 2px; /* Plus compact */
+            padding: 0.6rem 2px;
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
             border-radius: 10px;
-            font-size: 0.7rem; /* Réduit pour tenir sur une ligne */
+            font-size: 0.7rem;
             margin-bottom: 4px;
             text-align: center;
+        }
+
+        /* Mise en évidence du Vendredi */
+        .month-row.friday-highlight {
+            border-color: var(--accent);
+            background: rgba(226, 176, 94, 0.15);
         }
 
         .col { 
@@ -257,7 +263,6 @@
             text-transform: capitalize;
             font-size: 0.65rem;
         }
-        /* -------------------------------------- */
 
         .tabs {
             display: flex;
@@ -500,7 +505,6 @@
         const res = await fetch(`https://api.aladhan.com/v1/calendar?latitude=${lat}&longitude=${lon}&method=${method}&month=${d.getMonth()+1}&year=${d.getFullYear()}`);
         const json = await res.json();
         
-        // Liste des jours pour l'affichage
         const daysFr = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
         
         let html = "";
@@ -512,12 +516,15 @@
             const m = day.timings.Maghrib.split(' ')[0];
             const i = day.timings.Isha.split(' ')[0];
 
-            // Récupérer le nom du jour
             const dateObj = new Date(day.date.readable);
-            const dayName = daysFr[dateObj.getDay()];
+            const dayIndex = dateObj.getDay(); // 0 pour Dimanche, 5 pour Vendredi
+            const dayName = daysFr[dayIndex];
+
+            // On ajoute la classe "friday-highlight" si c'est un Vendredi (index 5)
+            const isFridayClass = dayIndex === 5 ? "friday-highlight" : "";
 
             html += `
-                <div class="month-row">
+                <div class="month-row ${isFridayClass}">
                     <div class="col-date">${day.date.gregorian.day}</div>
                     <div class="col-day">${dayName}</div>
                     <div class="col">${f}</div>
