@@ -131,83 +131,55 @@
             border-radius: 20px;
         }
 
+        /* --- AJUSTEMENTS CALENDRIER MOBILE --- */
         .month-header {
             display: flex;
-            padding: 0.5rem;
+            padding: 0.5rem 0.2rem;
             color: var(--accent);
-            font-size: 0.6rem;
+            font-size: 0.55rem; /* Réduit pour mobile */
             font-weight: 700;
             text-transform: uppercase;
         }
 
         .month-row {
             display: flex;
-            padding: 0.8rem 0.5rem;
+            padding: 0.7rem 0.2rem;
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            margin-bottom: 6px;
+            border-radius: 10px;
+            font-size: 0.65rem; /* Réduit pour mobile */
+            margin-bottom: 5px;
             text-align: center;
+            justify-content: space-between;
         }
 
-        .col { flex: 1; display: flex; justify-content: center; align-items: center; }
-        .col-date { width: 25px; flex: 0 0 auto; font-weight: 800; color: var(--accent); }
-        .col-day { width: 35px; flex: 0 0 auto; font-size: 0.65rem; color: var(--text-dim); }
+        .col { 
+            flex: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-width: 0; /* Évite que le texte ne pousse la colonne */
+        }
+        
+        .col-date { width: 22px; flex: 0 0 auto; font-weight: 800; color: var(--accent); }
+        .col-day { width: 28px; flex: 0 0 auto; font-size: 0.6rem; color: var(--text-dim); }
 
         .tabs { display: flex; gap: 10px; margin-bottom: 1.5rem; }
         .tab-btn { flex: 1; background: var(--card-bg); border: 1px solid var(--glass-border); color: var(--text-dim); padding: 10px; border-radius: 12px; cursor: pointer; }
         .tab-btn.active { background: var(--text-main); color: var(--bg-deep); }
         .hidden { display: none; }
 
-        /* --- STYLES IMPRESSION OPTIMISÉS POUR A4 --- */
+        /* --- STYLES IMPRESSION OPTIMISÉS --- */
         @media print {
-            @page { 
-                size: A4 landscape; 
-                margin: 0.5cm; /* Marges réduites pour gagner de la place */
-            }
-            
+            @page { size: A4 landscape; margin: 0.5cm; }
             body { background: white !important; }
             body * { visibility: hidden; }
-            
             #viewMonth, #viewMonth * { visibility: visible; }
-            
-            #viewMonth { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                display: block !important; 
-            }
-            
-            #printCityName { 
-                display: block !important; 
-                text-align: center; 
-                margin: 0 0 10px 0; 
-                color: #000; 
-                font-size: 1.2rem;
-                border-bottom: 1px solid #e2b05e;
-            }
-
+            #viewMonth { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
+            #printCityName { display: block !important; text-align: center; margin: 0 0 10px 0; color: #000; font-size: 1.2rem; border-bottom: 1px solid #e2b05e; }
             .btn-print, .tabs, header { display: none !important; }
-
-            .month-header { 
-                color: #000 !important; 
-                border-bottom: 1px solid #000 !important;
-                padding: 2px 0 !important;
-                font-size: 0.7rem !important;
-            }
-
-            .month-row { 
-                background: #fff !important; 
-                border: 0.5px solid #eee !important; 
-                border-radius: 0 !important;
-                color: #000 !important; 
-                margin-bottom: 0 !important; /* On supprime l'espace entre les lignes */
-                padding: 3px 0 !important; /* Compression verticale */
-                font-size: 0.8rem !important; /* Police ajustée pour la lisibilité */
-            }
-
+            .month-header { color: #000 !important; border-bottom: 1px solid #000 !important; font-size: 0.7rem !important; }
+            .month-row { background: #fff !important; border: 0.5px solid #eee !important; border-radius: 0 !important; color: #000 !important; margin-bottom: 0 !important; padding: 3px 0 !important; font-size: 0.8rem !important; }
             .col-date, .col-day { color: #000 !important; font-weight: bold; }
             .friday-row { background-color: #f2f2f2 !important; font-weight: bold; }
             .friday-row .col-date, .friday-row .col-day { color: #e2b05e !important; }
