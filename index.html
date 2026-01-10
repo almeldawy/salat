@@ -131,58 +131,42 @@
             border-radius: 20px;
         }
 
-        /* --- AJUSTEMENTS CALENDRIER MOBILE --- */
+        /* --- STYLES CALENDRIER --- */
         .month-header {
             display: flex;
-            padding: 0.5rem 0.2rem;
+            padding: 0.5rem 0;
             color: var(--accent);
-            font-size: 0.55rem; /* Réduit pour mobile */
+            font-size: 0.55rem;
             font-weight: 700;
             text-transform: uppercase;
         }
 
         .month-row {
             display: flex;
-            padding: 0.7rem 0.2rem;
+            padding: 0.7rem 0;
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            font-size: 0.65rem; /* Réduit pour mobile */
-            margin-bottom: 5px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            margin-bottom: 6px;
             text-align: center;
-            justify-content: space-between;
         }
 
-        .col { 
-            flex: 1; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            min-width: 0; /* Évite que le texte ne pousse la colonne */
-        }
-        
-        .col-date { width: 22px; flex: 0 0 auto; font-weight: 800; color: var(--accent); }
-        .col-day { width: 28px; flex: 0 0 auto; font-size: 0.6rem; color: var(--text-dim); }
+        .col { flex: 1; display: flex; justify-content: center; align-items: center; min-width: 0; }
+        .col-date { width: 25px; flex: 0 0 auto; font-weight: 800; color: var(--accent); }
+        .col-day { width: 30px; flex: 0 0 auto; font-size: 0.6rem; color: var(--text-dim); }
 
         .tabs { display: flex; gap: 10px; margin-bottom: 1.5rem; }
         .tab-btn { flex: 1; background: var(--card-bg); border: 1px solid var(--glass-border); color: var(--text-dim); padding: 10px; border-radius: 12px; cursor: pointer; }
         .tab-btn.active { background: var(--text-main); color: var(--bg-deep); }
         .hidden { display: none; }
 
-        /* --- STYLES IMPRESSION OPTIMISÉS --- */
         @media print {
             @page { size: A4 landscape; margin: 0.5cm; }
-            body { background: white !important; }
             body * { visibility: hidden; }
             #viewMonth, #viewMonth * { visibility: visible; }
             #viewMonth { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
-            #printCityName { display: block !important; text-align: center; margin: 0 0 10px 0; color: #000; font-size: 1.2rem; border-bottom: 1px solid #e2b05e; }
             .btn-print, .tabs, header { display: none !important; }
-            .month-header { color: #000 !important; border-bottom: 1px solid #000 !important; font-size: 0.7rem !important; }
-            .month-row { background: #fff !important; border: 0.5px solid #eee !important; border-radius: 0 !important; color: #000 !important; margin-bottom: 0 !important; padding: 3px 0 !important; font-size: 0.8rem !important; }
-            .col-date, .col-day { color: #000 !important; font-weight: bold; }
-            .friday-row { background-color: #f2f2f2 !important; font-weight: bold; }
-            .friday-row .col-date, .friday-row .col-day { color: #e2b05e !important; }
         }
     </style>
 </head>
@@ -207,8 +191,8 @@
     <div id="viewToday">
         <div class="next-prayer-card">
             <div id="nextName">Prochaine...</div>
-            <div id="nextTime" class="next-prayer-time">--:--</div>
-            <div id="timer" class="countdown">--</div>
+            <div id="nextTime" style="font-size: 2rem; font-weight: 800; margin: 10px 0;">--:--</div>
+            <div id="timer" style="color: var(--accent); font-weight: 600;">--</div>
         </div>
         <div class="prayer-grid" id="prayerList"></div>
     </div>
@@ -217,8 +201,6 @@
         <button onclick="window.print()" class="btn-search btn-print" style="width: 100%; margin-bottom: 10px;">
             🖨️ Télécharger le mois (PDF)
         </button>
-        <h2 id="printCityName" style="display: none;"></h2>
-        
         <div class="month-header">
             <div class="col-date">#</div>
             <div class="col-day">J</div>
@@ -235,15 +217,20 @@
 </div>
 
 <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); });
-    }
-
     let lat, lon;
     const method = 3; 
 
     function toggleTheme() {
         document.body.classList.toggle('light-mode');
+        const btn = document.getElementById('themeToggle');
+        btn.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+    }
+
+    function switchTab(view) {
+        document.getElementById('viewToday').classList.toggle('hidden', view !== 'today');
+        document.getElementById('viewMonth').classList.toggle('hidden', view !== 'month');
+        document.getElementById('btnToday').classList.toggle('active', view === 'today');
+        document.getElementById('btnMonth').classList.toggle('active', view === 'month');
     }
 
     window.onload = () => {
@@ -260,10 +247,6 @@
         }
     };
 
-    function updateLocationText(text) {
-        document.getElementById('locationDisplay').innerText = "📍 " + text;
-    }
-
     async function searchCity() {
         const city = document.getElementById('cityInput').value;
         if(!city) return;
@@ -276,40 +259,78 @@
         }
     }
 
-    function switchTab(view) {
-        document.getElementById('viewToday').classList.toggle('hidden', view !== 'today');
-        document.getElementById('viewMonth').classList.toggle('hidden', view !== 'month');
-        document.getElementById('btnToday').classList.toggle('active', view === 'today');
-        document.getElementById('btnMonth').classList.toggle('active', view === 'month');
+    function updateLocationText(text) {
+        document.getElementById('locationDisplay').innerText = "📍 " + text;
     }
 
     async function loadData() {
         const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=${method}`);
         const json = await res.json();
         const t = json.data.timings;
+        
         const prayers = [
             {n: "Fajr", t: t.Fajr}, {n: "Chourouq", t: t.Sunrise}, {n: "Dhuhr", t: t.Dhuhr},
             {n: "Asr", t: t.Asr}, {n: "Maghrib", t: t.Maghrib}, {n: "Isha", t: t.Isha}
         ];
+
+        // Remplissage de la liste
         document.getElementById('prayerList').innerHTML = prayers.map(p => `
             <div class="prayer-row"><span>${p.n}</span><span>${p.t}</span></div>
         `).join('');
+
+        updateNextPrayer(t);
         loadMonthData();
+    }
+
+    function updateNextPrayer(timings) {
+        const now = new Date();
+        const prayers = [
+            {id: 'Fajr', t: timings.Fajr},
+            {id: 'Dhuhr', t: timings.Dhuhr},
+            {id: 'Asr', t: timings.Asr},
+            {id: 'Maghrib', t: timings.Maghrib},
+            {id: 'Isha', t: timings.Isha}
+        ];
+
+        let next = null;
+        for (let p of prayers) {
+            const [h, m] = p.t.split(':');
+            const pDate = new Date();
+            pDate.setHours(h, m, 0);
+            if (pDate > now) {
+                next = { ...p, date: pDate };
+                break;
+            }
+        }
+
+        if (!next) { // Si toutes les prières sont passées, c'est le Fajr de demain
+            const [h, m] = prayers[0].t.split(':');
+            const pDate = new Date();
+            pDate.setDate(pDate.getDate() + 1);
+            pDate.setHours(h, m, 0);
+            next = { ...prayers[0], date: pDate };
+        }
+
+        document.getElementById('nextName').innerText = "Prochaine : " + next.id;
+        document.getElementById('nextTime').innerText = next.t;
+
+        // Compte à rebours
+        const diff = next.date - now;
+        const hours = Math.floor(diff / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        document.getElementById('timer').innerText = `dans ${hours}h ${mins}m`;
     }
 
     async function loadMonthData() {
         const d = new Date();
         const res = await fetch(`https://api.aladhan.com/v1/calendar?latitude=${lat}&longitude=${lon}&method=${method}&month=${d.getMonth()+1}&year=${d.getFullYear()}`);
         const json = await res.json();
-        const ville = document.getElementById('locationDisplay').innerText.replace('📍 ', '').split(',')[0];
-        document.getElementById('printCityName').innerText = `${ville} - ${d.toLocaleDateString('fr-FR', {month:'long', year:'numeric'})}`;
 
         const joursFr = { 'Monday': 'Lun', 'Tuesday': 'Mar', 'Wednesday': 'Mer', 'Thursday': 'Jeu', 'Friday': 'Ven', 'Saturday': 'Sam', 'Sunday': 'Dim' };
         let html = "";
         json.data.forEach(day => {
             const nomJ = day.date.gregorian.weekday.en;
-            const isFriday = nomJ === 'Friday' ? 'friday-row' : '';
-            html += `<div class="month-row ${isFriday}">
+            html += `<div class="month-row">
                 <div class="col-date">${day.date.gregorian.day}</div>
                 <div class="col-day">${joursFr[nomJ]}</div>
                 <div class="col">${day.timings.Fajr.split(' ')[0]}</div>
